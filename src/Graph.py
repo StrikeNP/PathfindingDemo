@@ -21,10 +21,11 @@ class Graph:
         self.adj_chance = adj_chance
         self.nearby_threashold = nearby_threshold
         self.nodes = []
-        self.adjacencies = {}
+        self.adjacencies = [[[] for i in range(max_y)] for j in range(max_x)]
         self.fill_graph()
         self.start = self.nodes[random.randint(0,len(self.nodes))]
         self.goal = self.start
+        self.solution = []
         while self.goal == self.start and len(self.nodes) >= 2:
             self.goal = self.nodes[random.randint(0,len(self.nodes))]
 
@@ -86,8 +87,9 @@ class Graph:
         new_node = Node.Node(x_pos, y_pos)
         self.nodes.append(new_node)
         for node in self.nodes:
-            if self.nodes_are_close(new_node, node):
-                self.adjacencies[new_node.name+'To'+node.name] = (new_node, node, self.calc_dist(new_node, node))
+            if self.nodes_are_close(new_node, node) and new_node is not node:
+                # self.adjacencies[new_node.name+'To'+node.name] = (new_node, node, self.calc_dist(new_node, node))
+                self.adjacencies[new_node.x_pos][new_node.y_pos].append(node)
 
     def nodes_are_close(self, nodeA: Node, nodeB: Node):
         '''
@@ -121,14 +123,26 @@ class Graph:
 
         plt.figure()
         plt.subplot(111)
+
+        # Plot each node
         for node in self.nodes:
             plt.plot(node.x_pos, node.y_pos, 'bo')
-        for key, (nodeA, nodeB, _) in self.adjacencies.items():
-            x_vals = [nodeA.x_pos, nodeB.x_pos]
-            y_vals = [nodeA.y_pos, nodeB.y_pos]
-            plt.plot(x_vals, y_vals, 'b-')
-        plt.plot(self.start.x_pos, self.start.y_pos, 'go')
-        plt.plot(self.goal.x_pos, self.goal.y_pos, 'ko')
+
+        # Plot each node connection
+        for x in range(self.max_x):
+            for y in range(self.max_y):
+                for adj_node in self.adjacencies[x][y]:
+                    plt.plot([x,adj_node.x_pos], [y, adj_node.y_pos], 'b-')
+
+        # Plot solution
+        for i in range(0,len(self.solution) - 1):
+            nodeA = self.solution[i]
+            nodeB = self.solution[i + 1]
+            plt.plot([nodeA.x_pos,nodeB.x_pos], [nodeA.y_pos, nodeB.y_pos], 'm-')
+
+        # Plot starting and goal nodes
+        plt.plot(self.start.x_pos, self.start.y_pos, 'go', markersize=10.0)
+        plt.plot(self.goal.x_pos, self.goal.y_pos, 'ko', markersize=10.0)
 
         title = 'graph'
         plt.savefig(title + '.png')

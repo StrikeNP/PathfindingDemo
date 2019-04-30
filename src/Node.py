@@ -6,4 +6,5 @@ class Node():
         self.x_pos = x_pos
         self.y_pos = y_pos
         self.name = "X" + str(x_pos)+'Y' + str(y_pos)
+        self.parent = None
         pass
