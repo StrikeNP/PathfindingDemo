@@ -26,10 +26,13 @@ class Search:
         :return: an array of Node objects representing the path from start -> goal, returns emtpy array if no path found
         '''
         cheapest_node = self.start
-        while cheapest_node is not self.goal:
-            if self.get_cheapest_node() is None:
-                break # TODO is there a better way to handle this?
+        goal_found = False
+        while not goal_found:
+            # if self.get_cheapest_node() is None:
+            #     break # TODO is there a better way to handle this?
             cheapest_node = self.get_cheapest_node()
+            if cheapest_node is self.goal:
+                goal_found = True
             for adj_node in self.get_adj_nodes(cheapest_node):
                 prev_path_len, prev_path_cost = self.avail_node_costs[cheapest_node]
                 distance = self.graph.calc_dist(cheapest_node, adj_node)
@@ -41,7 +44,7 @@ class Search:
 
         solution_path = []
         temp_node = self.goal
-        while temp_node is not self.start:
+        while temp_node is not self.start and temp_node is not None:
             solution_path.append(temp_node)
             temp_node = temp_node.parent
         solution_path.append(self.start)

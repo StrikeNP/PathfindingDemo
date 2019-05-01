@@ -115,9 +115,10 @@ class Graph:
                 if create_node:
                     self.gen_node_at_pos(x, y)
 
-    def save(self):
+    def save(self, filename):
         '''
         Save the graph to a .png file
+        :param filename: Name of the file to save the graph to (do not include the .png ext)
         :return: none
         '''
 
@@ -126,13 +127,13 @@ class Graph:
 
         # Plot each node
         for node in self.nodes:
-            plt.plot(node.x_pos, node.y_pos, 'bo')
+            plt.plot(node.x_pos, node.y_pos, 'bo', markersize=2.0)
 
         # Plot each node connection
         for x in range(self.max_x):
             for y in range(self.max_y):
                 for adj_node in self.adjacencies[x][y]:
-                    plt.plot([x,adj_node.x_pos], [y, adj_node.y_pos], 'b-')
+                    plt.plot([x,adj_node.x_pos], [y, adj_node.y_pos], 'b-', linewidth=0.2)
 
         # Plot solution
         for i in range(0,len(self.solution) - 1):
@@ -141,8 +142,7 @@ class Graph:
             plt.plot([nodeA.x_pos,nodeB.x_pos], [nodeA.y_pos, nodeB.y_pos], 'm-')
 
         # Plot starting and goal nodes
-        plt.plot(self.start.x_pos, self.start.y_pos, 'go', markersize=10.0)
-        plt.plot(self.goal.x_pos, self.goal.y_pos, 'ko', markersize=10.0)
+        plt.plot(self.start.x_pos, self.start.y_pos, 'go', markersize=5.0)
+        plt.plot(self.goal.x_pos, self.goal.y_pos, 'ko', markersize=5.0)
 
-        title = 'graph'
-        plt.savefig(title + '.png')
+        plt.savefig(filename + '.png')
